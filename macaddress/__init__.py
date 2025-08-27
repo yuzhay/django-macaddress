@@ -46,13 +46,17 @@ def format_mac(eui_obj, dialect):
     return str(eui_obj)
 
 
-from pkg_resources import get_distribution, DistributionNotFound
-import os.path
+# ===== Replace pkg_resources with importlib.metadata =====
+try:
+    # Python 3.8+
+    from importlib.metadata import version, PackageNotFoundError
+except ImportError:
+    # For older Python versions
+    from importlib_metadata import version, PackageNotFoundError
 
 try:
-    _dist = get_distribution('django-macaddress')
-except DistributionNotFound:
+    __version__ = version('django-macaddress')
+except PackageNotFoundError:
     __version__ = 'Please install this project with setup.py'
-else:
-    __version__ = _dist.version
-VERSION = __version__   # synonym
+
+VERSION = __version__  # synonym
